@@ -45,6 +45,10 @@ public class Study {
 
   private String thumbnail;
 
+  private MeetingType meetingType;
+
+  private StudyStatus status;
+
   private Long leaderUserId;
 
   @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
@@ -52,4 +56,5 @@ public class Study {
 
   @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
   private List<StudyCategory> categories;
+
 }
