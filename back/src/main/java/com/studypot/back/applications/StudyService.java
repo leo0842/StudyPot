@@ -51,6 +51,8 @@ public class StudyService {
             .title(studyCreateRequestDto.getTitle())
             .content(studyCreateRequestDto.getContent())
             .maxNumber(studyCreateRequestDto.getMaxNumber())
+            .meetingType(studyCreateRequestDto.getMeetingType())
+            .status(studyCreateRequestDto.getStatus())
             .thumbnail(thumbnailUrl)
             .leaderUserId(userId)
             .build()
