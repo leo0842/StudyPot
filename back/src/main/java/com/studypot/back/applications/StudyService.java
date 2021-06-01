@@ -12,6 +12,7 @@ import com.studypot.back.domain.User;
 import com.studypot.back.domain.UserRepository;
 import com.studypot.back.dto.study.StudyCreateRequestDto;
 import com.studypot.back.dto.study.StudyDetailResponseDto;
+import com.studypot.back.dto.study.StudySimpleResponseDto;
 import com.studypot.back.exceptions.StudyNotFoundException;
 import com.studypot.back.exceptions.UserNotFoundException;
 import com.studypot.back.s3.S3Service;
@@ -21,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -109,4 +111,21 @@ public class StudyService {
     return new StudyDetailResponseDto(study, leader);
   }
 
+  public List<StudySimpleResponseDto> getStudyList(CategoryName categoryName) {
+    return toStudySimpleResponseDtoList(findStudyCategoryByCategoryOrAll(categoryName));
+  }
+
+  private List<StudyCategory> findStudyCategoryByCategoryOrAll(CategoryName categoryName) {
+    if (categoryName != null) {
+      return studyCategoryRepository.findAllByCategory(categoryName);
+    } else {
+      return studyCategoryRepository.findAll();
+    }
+  }
+
+  private List<StudySimpleResponseDto> toStudySimpleResponseDtoList(List<StudyCategory> studyCategoryList) {
+    return studyCategoryList.stream()
+        .map(studyCategory -> new StudySimpleResponseDto(studyCategory.getStudy()))
+        .collect(Collectors.toList());
+  }
 }
