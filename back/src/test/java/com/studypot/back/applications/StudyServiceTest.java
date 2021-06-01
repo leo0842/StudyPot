@@ -46,25 +46,42 @@ class StudyServiceTest {
   @Mock
   private S3Service s3Service;
 
+  private Long userId;
+  private Long studyId;
+  private String userName;
+  private User mockUser;
+  private Study mockStudy;
+  private CategoryName categoryName;
+  private StudyStatus status;
+  private List<StudyCategory> categories = new ArrayList<>();
+  private List<StudyMember> members = new ArrayList<>();
+
   @BeforeEach
   public void setUp() {
     openMocks(this);
     this.studyService = new StudyService(studyRepository, userRepository, studyMemberRepository, studyCategoryRepository, s3Service);
+    this.userId = 1L;
+    this.studyId = 123L;
+    this.userName = "leoleo";
+    this.categoryName = CategoryName.INTERVIEW;
+    this.status = StudyStatus.OPEN;
+    this.categories.add(StudyCategory.builder().study(mockStudy).category(categoryName).build());
+    this.members.add(new StudyMember());
+
+    this.mockUser = User.builder().id(userId).name(userName).build();
+    this.mockStudy = Study.builder().id(studyId).status(status).maxNumber(19).categories(categories).leaderUserId(userId).members(members)
+        .build();
   }
 
   @Test
   public void addStudy() throws IOException {
-    Long userId = 1L;
-    User mockUser = User.builder().build();
-    Study mockStudy = Study.builder().status(StudyStatus.OPEN).leaderUserId(userId).build();
-
     given(studyRepository.save(any(Study.class))).willReturn(mockStudy);
     given(userRepository.findById(any(Long.class))).willReturn(Optional.ofNullable(mockUser));
 
-    List<CategoryName> categories = new ArrayList<>();
-    categories.add(CategoryName.INTERVIEW);
+    List<CategoryName> categoryNames = new ArrayList<>();
+    categoryNames.add(categoryName);
     StudyCreateRequestDto studyCreateRequestDto = new StudyCreateRequestDto();
-    studyCreateRequestDto.setCategories(categories);
+    studyCreateRequestDto.setCategories(categoryNames);
 
     Study study = studyService.addStudy(userId, studyCreateRequestDto);
 
@@ -74,20 +91,9 @@ class StudyServiceTest {
 
   @Test
   public void getStudy() {
-    Long studyId = 123L;
-    Long leaderId = 1L;
-    String userName = "leoleo";
-
-    List<StudyCategory> categories = new ArrayList<>();
-    categories.add(StudyCategory.builder().category(CategoryName.INTERVIEW).build());
-    List<StudyMember> members = new ArrayList<>();
-    members.add(new StudyMember());
-
-    Study mockStudy = Study.builder().id(studyId).maxNumber(19).categories(categories).leaderUserId(leaderId).members(members).build();
-    User mockUser = User.builder().id(leaderId).name(userName).build();
 
     given(studyRepository.findById(studyId)).willReturn(Optional.ofNullable(mockStudy));
-    given(userRepository.findById(leaderId)).willReturn(Optional.ofNullable(mockUser));
+    given(userRepository.findById(userId)).willReturn(Optional.ofNullable(mockUser));
 
     StudyDetailResponseDto studyDetailResponseDto = studyService.getStudy(studyId);
     assertThat(studyDetailResponseDto.getMaxNumber(), is(19));
