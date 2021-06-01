@@ -13,6 +13,7 @@ import com.studypot.back.domain.StudyCategoryRepository;
 import com.studypot.back.domain.StudyMember;
 import com.studypot.back.domain.StudyMemberRepository;
 import com.studypot.back.domain.StudyRepository;
+import com.studypot.back.domain.StudyStatus;
 import com.studypot.back.domain.User;
 import com.studypot.back.domain.UserRepository;
 import com.studypot.back.dto.study.StudyCreateRequestDto;
@@ -55,7 +56,7 @@ class StudyServiceTest {
   public void addStudy() throws IOException {
     Long userId = 1L;
     User mockUser = User.builder().build();
-    Study mockStudy = Study.builder().leaderUserId(userId).build();
+    Study mockStudy = Study.builder().status(StudyStatus.OPEN).leaderUserId(userId).build();
 
     given(studyRepository.save(any(Study.class))).willReturn(mockStudy);
     given(userRepository.findById(any(Long.class))).willReturn(Optional.ofNullable(mockUser));
@@ -68,6 +69,7 @@ class StudyServiceTest {
     Study study = studyService.addStudy(userId, studyCreateRequestDto);
 
     assertThat(study.getLeaderUserId(), is(1L));
+    assertThat(study.getStatus().getValue(), is("Open"));
   }
 
   @Test
