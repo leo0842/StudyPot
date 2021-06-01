@@ -2,6 +2,7 @@ package com.studypot.back.interfaces;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,6 +51,14 @@ class StudyControllerTest {
         .andExpect(status().isCreated());
 
     verify(studyService).addStudy(any(Long.class), any(StudyCreateRequestDto.class));
+  }
+
+  @Test
+  public void studyDetail() throws Exception {
+    mvc.perform(get("/study/1"))
+        .andExpect(status().isOk());
+
+    verify(studyService).getStudy(1L);
   }
 
 }
