@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -45,8 +47,10 @@ public class Study {
 
   private String thumbnail;
 
+  @Enumerated(value = EnumType.STRING)
   private MeetingType meetingType;
 
+  @Enumerated(value = EnumType.STRING)
   private StudyStatus status;
 
   private Long leaderUserId;
