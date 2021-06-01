@@ -11,6 +11,8 @@ import com.studypot.back.domain.StudyRepository;
 import com.studypot.back.domain.User;
 import com.studypot.back.domain.UserRepository;
 import com.studypot.back.dto.study.StudyCreateRequestDto;
+import com.studypot.back.dto.study.StudyDetailResponseDto;
+import com.studypot.back.exceptions.StudyNotFoundException;
 import com.studypot.back.exceptions.UserNotFoundException;
 import com.studypot.back.s3.S3Service;
 import java.io.IOException;
@@ -98,4 +100,11 @@ public class StudyService {
       throw new IllegalArgumentException(String.format("not supported file: %s", name));
     }
   }
+
+  public StudyDetailResponseDto getStudy(Long id) {
+    Study study = studyRepository.findById(id).orElseThrow(StudyNotFoundException::new);
+    User leader = userRepository.findById(study.getLeaderUserId()).orElseThrow(UserNotFoundException::new);
+    return new StudyDetailResponseDto(study, leader);
+  }
+
 }
