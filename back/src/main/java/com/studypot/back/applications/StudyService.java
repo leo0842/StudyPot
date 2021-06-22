@@ -10,9 +10,10 @@ import com.studypot.back.domain.StudyMemberRepository;
 import com.studypot.back.domain.StudyRepository;
 import com.studypot.back.domain.User;
 import com.studypot.back.domain.UserRepository;
+import com.studypot.back.dto.study.InfinityScrollResponseDto;
+import com.studypot.back.dto.study.PageableRequestDto;
 import com.studypot.back.dto.study.StudyCreateRequestDto;
 import com.studypot.back.dto.study.StudyDetailResponseDto;
-import com.studypot.back.dto.study.StudySimpleResponseDto;
 import com.studypot.back.exceptions.StudyNotFoundException;
 import com.studypot.back.exceptions.UserNotFoundException;
 import com.studypot.back.s3.S3Service;
@@ -24,6 +25,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -111,21 +116,44 @@ public class StudyService {
     return new StudyDetailResponseDto(study, leader);
   }
 
-  public List<StudySimpleResponseDto> getStudyList(CategoryName categoryName) {
-    return toStudySimpleResponseDtoList(findStudyCategoryByCategoryOrAll(categoryName));
+  private Sort sortCreatedAt() {
+    return Sort.by(Direction.DESC, "createdAt");
   }
 
-  private List<StudyCategory> findStudyCategoryByCategoryOrAll(CategoryName categoryName) {
-    if (categoryName != null) {
-      return studyCategoryRepository.findAllByCategory(categoryName);
+  public InfinityScrollResponseDto getStudyList(PageableRequestDto pageableRequestDto) {
+    PageRequest pageRequest = PageRequest.of(0, pageableRequestDto.getSize(), sortCreatedAt());
+    List<Study> studyList;
+    if (pageableRequestDto.isFirst()) {
+
+      if (pageableRequestDto.isEntireCategory()) {
+
+        Page<Study> studyPage = studyRepository.findAll(pageRequest);
+        studyList = studyPage.stream().collect(Collectors.toList());
+      } else {
+
+        List<StudyCategory> studyCategoryList = studyCategoryRepository
+            .findAllByCategory(pageRequest, pageableRequestDto.getCategoryName());
+        studyList = studyCategoryList.stream().map(StudyCategory::getStudy).collect(Collectors.toList());
+      }
     } else {
-      return studyCategoryRepository.findAll();
-    }
-  }
 
-  private List<StudySimpleResponseDto> toStudySimpleResponseDtoList(List<StudyCategory> studyCategoryList) {
-    return studyCategoryList.stream()
-        .map(studyCategory -> new StudySimpleResponseDto(studyCategory.getStudy()))
-        .collect(Collectors.toList());
+      if (pageableRequestDto.isEntireCategory()) {
+
+        studyList = studyRepository.findAllByIdLessThan(pageRequest, pageableRequestDto.getLastId());
+      } else {
+
+        List<StudyCategory> studyCategoryList = studyCategoryRepository
+            .findAllByCategoryAndStudyIdLessThan(
+                pageRequest, pageableRequestDto.getCategoryName(), pageableRequestDto.getLastId()
+            );
+
+        studyList = studyCategoryList.stream().map(StudyCategory::getStudy).collect(Collectors.toList());
+      }
+    }
+
+    StudyCategory lastStudyCategory = studyCategoryRepository.getFirstByCategory(pageableRequestDto.getCategoryName())
+        .orElseThrow(StudyNotFoundException::new);
+
+    return new InfinityScrollResponseDto(studyList, lastStudyCategory.getStudy());
   }
 }

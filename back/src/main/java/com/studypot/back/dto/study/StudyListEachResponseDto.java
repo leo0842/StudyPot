@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class StudySimpleResponseDto {
+public class StudyListEachResponseDto {
+
+  private Long id;
 
   private String thumbnail;
 
@@ -28,7 +30,10 @@ public class StudySimpleResponseDto {
 
   private Integer participatingNumber;
 
-  public StudySimpleResponseDto(Study study) {
+  private Long leaderUserId;
+
+  public StudyListEachResponseDto(Study study) {
+    this.id = study.getId();
     this.categories = studyCategoryList(study.getCategories());
     this.thumbnail = study.getThumbnail();
     this.title = study.getTitle();
@@ -37,6 +42,7 @@ public class StudySimpleResponseDto {
     this.meetingType = study.getMeetingType().getValue();
     this.maxNumber = study.getMaxNumber();
     this.participatingNumber = countMember(study);
+    this.leaderUserId = study.getLeaderUserId();
 
   }
 

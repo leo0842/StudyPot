@@ -1,5 +1,6 @@
 package com.studypot.back.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -55,9 +56,11 @@ public class Study {
 
   private Long leaderUserId;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
   private List<StudyMember> members;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
   private List<StudyCategory> categories;
 
