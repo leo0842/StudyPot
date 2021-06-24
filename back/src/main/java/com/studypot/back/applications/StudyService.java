@@ -151,9 +151,14 @@ public class StudyService {
       }
     }
 
-    StudyCategory lastStudyCategory = studyCategoryRepository.getFirstByCategory(pageableRequestDto.getCategoryName())
-        .orElseThrow(StudyNotFoundException::new);
+    if (pageableRequestDto.getCategoryName() == null) {
+      Study study = studyRepository.getFirstBy();
+      return new InfinityScrollResponseDto(studyList, study);
+    } else {
+      StudyCategory lastStudyCategory = studyCategoryRepository.getFirstByCategory(pageableRequestDto.getCategoryName())
+          .orElseThrow(StudyNotFoundException::new);
 
-    return new InfinityScrollResponseDto(studyList, lastStudyCategory.getStudy());
+      return new InfinityScrollResponseDto(studyList, lastStudyCategory.getStudy());
+    }
   }
 }

@@ -8,4 +8,6 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
   List<Study> findAllByIdLessThan(Pageable pageable, Long lastId);
 
+  Study getFirstBy();
+
 }
