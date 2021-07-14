@@ -22,6 +22,12 @@ jwt:
   refreshExpirationTimeMs: ${JWT_REFRESH_EXPIRATION_TIME}
 
 logging:
+  #  level:
+  #    org:
+  #      hibernate:
+  #        type:
+  #          descriptor:
+  #            sql: trace
   slack:
     webhook-uri: ${WEBHOOK_URI}
   config: classpath:logback-slack.xml

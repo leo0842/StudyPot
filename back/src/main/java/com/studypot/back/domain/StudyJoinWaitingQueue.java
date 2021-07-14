@@ -6,33 +6,37 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class StudyMember {
+@Getter
+@Where(clause = "active=true")
+public class StudyJoinWaitingQueue {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
-  private Study study;
+  private Long studyId;
 
   private Long userId;
 
   private String joinContent;
+
+  @Setter
+  private boolean active = true;
 
   @CreatedDate
   private LocalDateTime createdAt;

@@ -64,6 +64,9 @@ public class Study {
   @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
   private List<StudyCategory> categories;
 
+  @OneToMany(mappedBy = "studyId", cascade = CascadeType.ALL)
+  private List<StudyLike> studyLikes;
+
   public void addToStudyMemberList(Long userId) {
     if (members == null) {
       this.members = new ArrayList<>();
@@ -81,5 +84,10 @@ public class Study {
             .category(categoryName)
             .build())
         .forEach(this.categories::add);
+  }
+
+  public Integer countStudyLike() {
+
+    return (int) this.studyLikes.stream().filter(studyLike -> studyLike.getLikes().equals(true)).count();
   }
 }

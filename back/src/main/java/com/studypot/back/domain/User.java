@@ -51,4 +51,8 @@ public class User {
   @Setter
   private String imageUrl;
 
+  public void changeNewPassword(String password) {
+
+    this.password = password;
+  }
 }

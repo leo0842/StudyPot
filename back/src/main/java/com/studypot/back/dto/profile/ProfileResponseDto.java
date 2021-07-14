@@ -22,4 +22,7 @@ public class ProfileResponseDto {
 
   private String image;
 
+  private List<StudyListDto> participatingStudyList;
+
+  private List<StudyListDto> interestingStudyList;
 }

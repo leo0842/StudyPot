@@ -2,6 +2,7 @@ package com.studypot.back.interfaces;
 
 import com.studypot.back.applications.ProfileService;
 import com.studypot.back.auth.UserId;
+import com.studypot.back.dto.profile.PasswordChangeDto;
 import com.studypot.back.dto.profile.ProfileResponseDto;
 import com.studypot.back.dto.profile.UpdateProfileRequestDto;
 import io.swagger.annotations.Api;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -37,4 +40,13 @@ public class ProfileController {
     return profileService.updateProfile(userId, updateProfileRequestDto);
   }
 
+  @PutMapping("/user")
+  @ApiOperation("비밀번호 변경")
+  public void changePassword(
+      @UserId Long userId,
+      @RequestBody PasswordChangeDto passwordChangeDto
+  ) {
+
+    profileService.changePassword(userId, passwordChangeDto);
+  }
 }

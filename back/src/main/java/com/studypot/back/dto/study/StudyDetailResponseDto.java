@@ -13,9 +13,13 @@ import lombok.Getter;
 @Getter
 public class StudyDetailResponseDto {
 
+  private final Long studyId;
+
   private final String thumbnailUrl;
 
   private final LocalDateTime createdAt;
+
+  private final String locatedAt;
 
   private final List<CategoryResponseDto> categories;
 
@@ -29,15 +33,20 @@ public class StudyDetailResponseDto {
 
   private final LeaderDto leader;
 
+  private final Integer studyLikeCount;
+
   public StudyDetailResponseDto(Study study, User leader) {
+    this.studyId = study.getId();
     this.thumbnailUrl = study.getThumbnailUrl();
     this.createdAt = study.getCreatedAt();
+    this.locatedAt = study.getLocatedAt();
     this.categories = getCategoryNameList(study.getCategories());
     this.maxStudyNumber = study.getMaxStudyNumber();
     this.participatingNumber = countMember(study.getMembers());
     this.title = study.getTitle();
     this.content = study.getContent();
     this.leader = getLeaderInformation(leader);
+    this.studyLikeCount = study.countStudyLike();
   }
 
   private List<CategoryResponseDto> getCategoryNameList(List<StudyCategory> categories) {
