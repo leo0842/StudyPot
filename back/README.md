@@ -148,7 +148,7 @@ java -jar -DAWS_ACCESSKEY=... -DAWS_SECRETKEY=... ./build/libs/back-0.0.1-SNAPSH
 
 그리고 PageRequest 만들 때 넣을 size 와 무한 스크롤의 마지막을 알려줄 lastId 를 request parameter 로 받았습니다.
 
-[페이지네이션 관련 클래스](https://github.com/leo0842/StudyPot/blob/develop/back/src/main/java/com/studypot/back/applications/StudyService.java)
+[페이지네이션 관련 클래스](https://github.com/leo0842/StudyPot/blob/feature/STUDYPOT-40-study-infinity-scroll/back/src/main/java/com/studypot/back/applications/StudyService.java#L71)
 
 ### UserId 어노테이션
 
