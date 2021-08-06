@@ -9,7 +9,6 @@ import com.studypot.back.dto.study.StudyCreateRequestDto;
 import com.studypot.back.dto.study.StudyDetailResponseDto;
 import com.studypot.back.dto.study.StudyJoinRequestDto;
 import com.studypot.back.dto.study.StudyJoinWaitingResponseDto;
-import com.studypot.back.dto.study.StudyLikeResponseDto;
 import com.studypot.back.dto.study.StudyMemberResponseDto;
 import com.studypot.back.dto.study.UserParticipateStatusDto;
 import io.swagger.annotations.ApiOperation;
@@ -41,15 +40,16 @@ public class StudyController {
   }
 
   @GetMapping("/study/{studyId}")
-  public StudyDetailResponseDto studyDetail(@PathVariable("studyId") Long studyId) {
-    return studyService.getStudy(studyId);
+  public StudyDetailResponseDto studyDetail(@PathVariable("studyId") Long studyId, @UserId Long userId) {
+    return studyService.getStudy(studyId, userId);
   }
 
   @GetMapping("/study")
   public InfinityScrollResponseDto studyList(
-      PageableRequestDto pageableRequestDto
+      PageableRequestDto pageableRequestDto,
+      @UserId Long userId
   ) {
-    return studyService.getStudyList(pageableRequestDto);
+    return studyService.getStudyList(pageableRequestDto, userId);
   }
 
   @PostMapping("/study/{studyId}")
@@ -113,14 +113,14 @@ public class StudyController {
     studyService.likeStudy(userId, studyId);
   }
 
-  @GetMapping("/study/{studyId}/like")
-  public StudyLikeResponseDto getLikeInfo(
-      @UserId Long userId,
-      @PathVariable("studyId") Long studyId
-  ) {
-
-    return studyService.getLikeInfo(userId, studyId);
-  }
+//  @GetMapping("/study/{studyId}/like")
+//  public StudyLikeResponseDto getLikeInfo(
+//      @UserId Long userId,
+//      @PathVariable("studyId") Long studyId
+//  ) {
+//
+//    return studyService.getLikeInfo(userId, studyId);
+//  }
 
   @GetMapping("/study/{studyId}/participate")
   public UserParticipateStatusDto getParticipateStatus(

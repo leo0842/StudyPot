@@ -77,14 +77,14 @@ public class StudyService {
     return studyRepository.save(study);
   }
 
-  public StudyDetailResponseDto getStudy(Long studyId) {
+  public StudyDetailResponseDto getStudy(Long studyId, Long userId) {
     Study study = studyRepository.findById(studyId).orElseThrow(StudyNotFoundException::new);
     User leader = userRepository.findById(study.getLeaderUserId()).orElseThrow(UserNotFoundException::new);
 
-    return new StudyDetailResponseDto(study, leader);
+    return new StudyDetailResponseDto(study, leader, makeStudyLikeResponseDto(studyId, userId));
   }
 
-  public InfinityScrollResponseDto getStudyList(PageableRequestDto pageableRequestDto) {
+  public InfinityScrollResponseDto getStudyList(PageableRequestDto pageableRequestDto, Long userId) {
     PageRequest pageRequest = PageRequest.of(0, pageableRequestDto.getSize(), sortCreatedAt());
 
     List<Study> studyList;
@@ -117,7 +117,8 @@ public class StudyService {
     }
 
     List<StudyListEachResponseDto> studyListEachResponseDtoList = studyList.stream()
-        .map(eachStudy -> new StudyListEachResponseDto(eachStudy, getLeader(eachStudy.getLeaderUserId())))
+        .map(eachStudy -> new StudyListEachResponseDto(eachStudy, getLeader(eachStudy.getLeaderUserId()),
+            makeStudyLikeResponseDto(eachStudy.getId(), userId)))
         .collect(Collectors.toList());
 
     if (pageableRequestDto.isEntireCategory()) {
@@ -132,6 +133,14 @@ public class StudyService {
 
       return new InfinityScrollResponseDto(studyListEachResponseDtoList, lastStudyCategory.getStudy());
     }
+  }
+
+  private StudyLikeResponseDto makeStudyLikeResponseDto(Long studyId, Long userId) {
+
+    Integer likeCount = studyLikeRepository.countByStudyIdAndLikesTrue(studyId);
+    Optional<StudyLike> studyLike = studyLikeRepository.findByStudyIdAndUserIdAndLikesTrue(studyId, userId);
+
+    return new StudyLikeResponseDto(likeCount, studyLike.isPresent());
   }
 
   private User getLeader(Long leaderUserId) {
@@ -328,7 +337,7 @@ public class StudyService {
     List<Study> studyList = studyRepository.findTop6ByOrderByCreatedAtDesc();
 
     return new LatestStudyDto(
-        studyList.stream().map(study -> new StudyListEachResponseDto(study, getLeader(study.getLeaderUserId())))
+        studyList.stream().map(study -> new StudyListEachResponseDto(study, getLeader(study.getLeaderUserId()), null))
             .collect(Collectors.toList()));
   }
 

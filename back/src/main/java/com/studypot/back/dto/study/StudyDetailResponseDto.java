@@ -33,9 +33,9 @@ public class StudyDetailResponseDto {
 
   private final LeaderDto leader;
 
-  private final Integer studyLikeCount;
+  private final StudyLikeResponseDto studyLike;
 
-  public StudyDetailResponseDto(Study study, User leader) {
+  public StudyDetailResponseDto(Study study, User leader, StudyLikeResponseDto studyLikeResponseDto) {
     this.studyId = study.getId();
     this.thumbnailUrl = study.getThumbnailUrl();
     this.createdAt = study.getCreatedAt();
@@ -46,7 +46,7 @@ public class StudyDetailResponseDto {
     this.title = study.getTitle();
     this.content = study.getContent();
     this.leader = getLeaderInformation(leader);
-    this.studyLikeCount = study.countStudyLike();
+    this.studyLike = studyLikeResponseDto;
   }
 
   private List<CategoryResponseDto> getCategoryNameList(List<StudyCategory> categories) {

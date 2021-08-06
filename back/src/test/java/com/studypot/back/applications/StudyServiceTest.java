@@ -123,7 +123,7 @@ class StudyServiceTest {
     given(studyRepository.findById(any())).willReturn(Optional.ofNullable(mockStudy));
     given(userRepository.findById(any())).willReturn(Optional.ofNullable(mockUser));
 
-    StudyDetailResponseDto studyDetailResponseDto = studyService.getStudy(1L);
+    StudyDetailResponseDto studyDetailResponseDto = studyService.getStudy(1L, 1L);
 
     assertThat(studyDetailResponseDto.getContent(), is("test"));
   }
@@ -136,7 +136,7 @@ class StudyServiceTest {
     given(studyRepository.findById(any())).willReturn(Optional.ofNullable(mockStudy));
     given(userRepository.findById(any())).willReturn(Optional.ofNullable(mockUser));
 
-    StudyDetailResponseDto studyDetailResponseDto = studyService.getStudy(1L);
+    StudyDetailResponseDto studyDetailResponseDto = studyService.getStudy(1L, 1L);
 
     assertThat(studyDetailResponseDto.getParticipatingNumber(), is(2));
   }
@@ -152,7 +152,7 @@ class StudyServiceTest {
     given(studyRepository.getFirstBy()).willReturn(Optional.ofNullable(mockStudy));
     given(userRepository.findById(mockStudy.getLeaderUserId())).willReturn(Optional.ofNullable(mockUser));
 
-    InfinityScrollResponseDto dto = studyService.getStudyList(new PageableRequestDto());
+    InfinityScrollResponseDto dto = studyService.getStudyList(new PageableRequestDto(), 1L);
 
     assertThat(dto.getLastIdOfStudyList(), is(mockStudy.getId()));
   }

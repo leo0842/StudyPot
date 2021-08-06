@@ -4,6 +4,7 @@ import com.studypot.back.domain.Study;
 import com.studypot.back.domain.StudyCategory;
 import com.studypot.back.domain.User;
 import com.studypot.back.dto.CategoryResponseDto;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -25,6 +26,8 @@ public class StudyListEachResponseDto {
 
   private String locatedAt;
 
+  private LocalDateTime createdAt;
+
   private String meetingType;
 
   private Integer maxNumber;
@@ -33,20 +36,21 @@ public class StudyListEachResponseDto {
 
   private LeaderDto leader;
 
-  private Integer studyLikeCount;
+  private StudyLikeResponseDto studyLike;
 
-  public StudyListEachResponseDto(Study study, User leader) {
+  public StudyListEachResponseDto(Study study, User leader, StudyLikeResponseDto studyLikeResponseDto) {
     this.id = study.getId();
     this.thumbnail = study.getThumbnailUrl();
     this.categories = studyCategoryList(study.getCategories());
     this.title = study.getTitle();
     this.content = study.getContent();
     this.locatedAt = study.getLocatedAt();
+    this.createdAt = study.getCreatedAt();
     this.meetingType = study.getMeetingType().getValue();
     this.maxNumber = study.getMaxStudyNumber();
     this.participatingNumber = countMember(study);
     this.leader = new LeaderDto(leader.getImageUrl(), leader.getName());
-    this.studyLikeCount = study.countStudyLike();
+    this.studyLike = studyLikeResponseDto;
   }
 
   private List<CategoryResponseDto> studyCategoryList(List<StudyCategory> categories) {
