@@ -1,8 +1,8 @@
 package com.studypot.back.dto.study;
 
-import com.studypot.back.domain.Study;
-import com.studypot.back.domain.StudyCategory;
-import com.studypot.back.domain.StudyMember;
+import com.studypot.back.domain.study.Study;
+import com.studypot.back.domain.study.StudyCategory;
+import com.studypot.back.domain.study.StudyMember;
 import com.studypot.back.domain.User;
 import com.studypot.back.dto.CategoryResponseDto;
 import java.time.LocalDateTime;

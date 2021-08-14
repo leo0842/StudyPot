@@ -1,4 +1,4 @@
-package com.studypot.back.domain;
+package com.studypot.back.domain.study;
 
 import java.time.LocalDateTime;
 import javax.persistence.Entity;

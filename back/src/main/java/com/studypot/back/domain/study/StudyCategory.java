@@ -1,5 +1,7 @@
-package com.studypot.back.domain;
+package com.studypot.back.domain.study;
 
+import com.studypot.back.domain.CategoryName;
+import com.studypot.back.domain.study.Study;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;

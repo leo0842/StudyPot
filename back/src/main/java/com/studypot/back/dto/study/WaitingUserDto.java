@@ -1,6 +1,6 @@
 package com.studypot.back.dto.study;
 
-import com.studypot.back.domain.StudyJoinWaitingQueue;
+import com.studypot.back.domain.study.StudyJoinWaitingQueue;
 import com.studypot.back.domain.User;
 import lombok.Data;
 

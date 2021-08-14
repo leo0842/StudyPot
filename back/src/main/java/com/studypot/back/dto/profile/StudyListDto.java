@@ -1,6 +1,6 @@
 package com.studypot.back.dto.profile;
 
-import com.studypot.back.domain.Study;
+import com.studypot.back.domain.study.Study;
 import lombok.Data;
 
 @Data

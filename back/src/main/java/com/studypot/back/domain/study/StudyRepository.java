@@ -1,4 +1,4 @@
-package com.studypot.back.domain;
+package com.studypot.back.domain.study;
 
 import java.util.List;
 import java.util.Optional;

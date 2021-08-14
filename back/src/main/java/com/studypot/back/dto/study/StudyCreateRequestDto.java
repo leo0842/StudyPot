@@ -2,7 +2,7 @@ package com.studypot.back.dto.study;
 
 import com.studypot.back.domain.CategoryName;
 import com.studypot.back.domain.MeetingType;
-import com.studypot.back.domain.Study;
+import com.studypot.back.domain.study.Study;
 import com.studypot.back.domain.StudyStatus;
 import java.util.List;
 import lombok.Data;

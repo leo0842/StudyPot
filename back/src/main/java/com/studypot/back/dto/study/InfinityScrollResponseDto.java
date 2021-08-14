@@ -1,6 +1,6 @@
 package com.studypot.back.dto.study;
 
-import com.studypot.back.domain.Study;
+import com.studypot.back.domain.study.Study;
 import java.util.List;
 import lombok.Data;
 

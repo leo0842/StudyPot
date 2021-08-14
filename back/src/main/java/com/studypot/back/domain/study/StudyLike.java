@@ -1,4 +1,4 @@
-package com.studypot.back.domain;
+package com.studypot.back.domain.study;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -1,5 +1,8 @@
-package com.studypot.back.domain;
+package com.studypot.back.domain.study;
 
+import com.studypot.back.domain.CategoryName;
+import com.studypot.back.domain.MeetingType;
+import com.studypot.back.domain.StudyStatus;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
