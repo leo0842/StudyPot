@@ -3,9 +3,11 @@ package com.studypot.back.dto.study;
 import com.studypot.back.domain.Study;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class InfinityScrollResponseDto implements InfinityPage<StudyListEachResponseDto> {
 
   Long lastIdOfStudyList;
@@ -24,7 +26,7 @@ public class InfinityScrollResponseDto implements InfinityPage<StudyListEachResp
 
   @Override
   public boolean isLast() {
-    
+
     return lastIdOfStudyList.equals(contents.get(contents.size() - 1).getId());
   }
 }

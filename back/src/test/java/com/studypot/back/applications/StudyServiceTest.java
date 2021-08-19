@@ -6,10 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.MockitoAnnotations.openMocks;
 
-import com.studypot.back.applications.study.EntireCategoryAfterPageStudyService;
-import com.studypot.back.applications.study.EntireCategoryFirstPageStudyService;
-import com.studypot.back.applications.study.SelectedCategoryAfterPageStudyService;
-import com.studypot.back.applications.study.SelectedCategoryFirstPageStudyService;
 import com.studypot.back.domain.CategoryName;
 import com.studypot.back.domain.MeetingType;
 import com.studypot.back.domain.Study;
@@ -20,10 +16,12 @@ import com.studypot.back.domain.StudyRepository;
 import com.studypot.back.domain.StudyStatus;
 import com.studypot.back.domain.User;
 import com.studypot.back.domain.UserRepository;
+import com.studypot.back.domain.query.QueryStudyRepository;
 import com.studypot.back.dto.study.InfinityScrollResponseDto;
 import com.studypot.back.dto.study.PageableRequestDto;
 import com.studypot.back.dto.study.StudyCreateRequestDto;
 import com.studypot.back.dto.study.StudyDetailResponseDto;
+import com.studypot.back.dto.study.StudyListEachResponseDto;
 import com.studypot.back.s3.S3Service;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,11 +31,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 
 class StudyServiceTest {
 
@@ -55,6 +49,9 @@ class StudyServiceTest {
   @Mock
   private StudyCategoryRepository studyCategoryRepository;
 
+  @Mock
+  private QueryStudyRepository queryStudyRepository;
+
   private Long userId;
 
   private User mockUser;
@@ -65,18 +62,6 @@ class StudyServiceTest {
 
   private List<StudyMember> studyMemberList = new ArrayList<>();
 
-  @Mock
-  private EntireCategoryFirstPageStudyService entireCategoryFirstPageStudyService;
-
-  @Mock
-  private EntireCategoryAfterPageStudyService entireCategoryAfterPageStudyService;
-
-  @Mock
-  private SelectedCategoryFirstPageStudyService selectedCategoryFirstPageStudyService;
-
-  @Mock
-  private SelectedCategoryAfterPageStudyService selectedCategoryAfterPageStudyService;
-
   @BeforeEach
   public void setUp() {
     openMocks(this);
@@ -85,10 +70,7 @@ class StudyServiceTest {
         s3Service,
         userRepository,
         studyCategoryRepository,
-        entireCategoryFirstPageStudyService,
-        entireCategoryAfterPageStudyService,
-        selectedCategoryFirstPageStudyService,
-        selectedCategoryAfterPageStudyService
+        queryStudyRepository
     );
     this.userId = 1L;
     this.studyCategoryList.add(StudyCategory.builder().category(CategoryName.JOB_INTERVIEW).build());
@@ -148,15 +130,26 @@ class StudyServiceTest {
   @Test
   @DisplayName("ResponseDto_응답_확인")
   public void getStudyList() {
-    List<Study> studyList = new ArrayList<>();
-    studyList.add(mockStudy);
-    Page<Study> page = new PageImpl<>(studyList);
 
-    given(studyRepository.findAll(PageRequest.of(0, 12, Sort.by(Direction.DESC, "createdAt")))).willReturn(page);
-    given(studyRepository.getFirstBy()).willReturn(Optional.ofNullable(mockStudy));
+    List<StudyListEachResponseDto> mockFilteredStudy = new ArrayList<>();
+    mockFilteredStudy.add(new StudyListEachResponseDto(mockStudy));
 
-    InfinityScrollResponseDto dto = studyService.getStudyList(new PageableRequestDto());
+    given(
+        queryStudyRepository.getFilteredStudy(
+            any(PageableRequestDto.class), any(PageRequest.class)
+        )
+    )
+        .willReturn(mockFilteredStudy);
+    given(
+        queryStudyRepository.getFirstId(
+            any(PageableRequestDto.class), any(PageRequest.class)
+        )
+    )
+        .willReturn(1L);
 
-    assertThat(dto.getLastIdOfStudyList(), is(mockStudy.getId()));
+    InfinityScrollResponseDto responseDto = studyService.getStudyList(new PageableRequestDto());
+
+    assertThat(responseDto.getContents().size(), is(1));
   }
+
 }
