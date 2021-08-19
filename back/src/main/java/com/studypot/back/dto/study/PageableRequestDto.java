@@ -1,6 +1,7 @@
 package com.studypot.back.dto.study;
 
 import com.studypot.back.domain.CategoryName;
+import com.studypot.back.domain.MeetingType;
 import lombok.Data;
 
 @Data
@@ -10,6 +11,8 @@ public class PageableRequestDto implements InfinityScrollRequest {
 
   private CategoryName categoryName;
 
+  private MeetingType meetingType;
+
   private Integer size = 12;
 
   public boolean isFirst() {
@@ -18,7 +21,7 @@ public class PageableRequestDto implements InfinityScrollRequest {
   }
 
   public boolean isEntireCategory() {
-    
+
     return this.categoryName == null;
   }
 
