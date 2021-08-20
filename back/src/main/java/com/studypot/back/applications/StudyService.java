@@ -93,7 +93,7 @@ public class StudyService {
     PageRequest pageRequest = PageRequest.of(0, pageableRequestDto.getSize(), sortCreatedAt());
 
     List<StudyListEachResponseDto> filteredStudy = queryStudyRepository.getFilteredStudy(pageableRequestDto, pageRequest);
-    Long lastId = queryStudyRepository.getFirstId(pageableRequestDto, pageRequest);
+    Long lastId = queryStudyRepository.getFirstId(pageableRequestDto);
 
     filteredStudy.forEach(dto -> dto.setStudyLike(makeStudyLikeResponseDto(dto.getId(), userId)));
 

@@ -39,7 +39,7 @@ public class QueryStudyRepository {
     return studyList.stream().map(StudyListEachResponseDto::new).collect(Collectors.toList());
   }
 
-  public Long getFirstId(PageableRequestDto request, Pageable pageable) {
+  public Long getFirstId(PageableRequestDto request) {
 
     QStudy study = QStudy.study;
     QStudyCategory category = QStudyCategory.studyCategory;
