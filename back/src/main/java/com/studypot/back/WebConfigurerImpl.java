@@ -1,9 +1,7 @@
 package com.studypot.back;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.studypot.back.auth.UserIdResolver;
 import java.util.List;
-import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.context.annotation.Bean;
@@ -25,8 +23,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfigurerImpl extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
   private final UserIdResolver userIdResolver;
-
-  private final EntityManager entityManager;
 
   @Override
   public void addCorsMappings(CorsRegistry registry) {
@@ -67,12 +63,6 @@ public class WebConfigurerImpl extends WebSecurityConfigurerAdapter implements W
   @Bean
   public ErrorProperties errorProperties() {
     return new ErrorProperties();
-  }
-
-  @Bean
-  public JPAQueryFactory jpaQueryFactory() {
-
-    return new JPAQueryFactory(entityManager);
   }
 
 }
