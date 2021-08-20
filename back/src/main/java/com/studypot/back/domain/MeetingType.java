@@ -1,10 +1,13 @@
 package com.studypot.back.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@JsonFormat(shape = Shape.OBJECT)
 public enum MeetingType {
 
   ONLINE("온라인"),
@@ -14,4 +17,8 @@ public enum MeetingType {
 
   private final String value;
 
+  private String getKey() {
+
+    return name();
+  }
 }

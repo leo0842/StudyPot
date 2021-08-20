@@ -1,12 +1,15 @@
 package com.studypot.back.dto.study;
 
 import com.studypot.back.domain.CategoryName;
+import com.studypot.back.domain.MeetingType;
 import lombok.Data;
 
 @Data
 public class PageableRequestDto {
 
   private CategoryName categoryName;
+
+  private MeetingType meetingType;
 
   private Long lastId;
 

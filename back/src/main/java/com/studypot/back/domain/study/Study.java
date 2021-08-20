@@ -3,6 +3,7 @@ package com.studypot.back.domain.study;
 import com.studypot.back.domain.CategoryName;
 import com.studypot.back.domain.MeetingType;
 import com.studypot.back.domain.StudyStatus;
+import com.studypot.back.domain.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Max;
 import lombok.AllArgsConstructor;
@@ -59,7 +61,8 @@ public class Study {
   @Enumerated(value = EnumType.STRING)
   private StudyStatus status;
 
-  private Long leaderUserId;
+  @ManyToOne
+  private User leader;
 
   @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
   private List<StudyMember> members;

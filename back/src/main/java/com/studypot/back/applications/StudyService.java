@@ -3,6 +3,9 @@ package com.studypot.back.applications;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.studypot.back.domain.MeetingType;
 import com.studypot.back.domain.ParticipateStatus;
+import com.studypot.back.domain.User;
+import com.studypot.back.domain.UserRepository;
+import com.studypot.back.domain.query.QueryStudyRepository;
 import com.studypot.back.domain.study.Study;
 import com.studypot.back.domain.study.StudyCategory;
 import com.studypot.back.domain.study.StudyCategoryRepository;
@@ -13,8 +16,6 @@ import com.studypot.back.domain.study.StudyLikeRepository;
 import com.studypot.back.domain.study.StudyMember;
 import com.studypot.back.domain.study.StudyMemberRepository;
 import com.studypot.back.domain.study.StudyRepository;
-import com.studypot.back.domain.User;
-import com.studypot.back.domain.UserRepository;
 import com.studypot.back.dto.LatestStudyDto;
 import com.studypot.back.dto.study.ApproveRejectDto;
 import com.studypot.back.dto.study.InfinityScrollResponseDto;
@@ -67,10 +68,13 @@ public class StudyService {
 
   private final StudyLikeRepository studyLikeRepository;
 
+  private final QueryStudyRepository queryStudyRepository;
+
   public Study addStudy(Long userId, StudyCreateRequestDto studyCreateRequestDto) throws IOException {
     String thumbnailUrl = createImageUrlOrNull(studyCreateRequestDto.getThumbnail());
 
-    Study study = studyCreateRequestDto.buildStudy(userId, thumbnailUrl);
+    User leader = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+    Study study = studyCreateRequestDto.buildStudy(leader, thumbnailUrl);
     study.addToStudyMemberList(userId);
     study.createStudyCategoryList(studyCreateRequestDto.getCategories());
 
@@ -79,12 +83,25 @@ public class StudyService {
 
   public StudyDetailResponseDto getStudy(Long studyId, Long userId) {
     Study study = studyRepository.findById(studyId).orElseThrow(StudyNotFoundException::new);
-    User leader = userRepository.findById(study.getLeaderUserId()).orElseThrow(UserNotFoundException::new);
+    User leader = study.getLeader();
 
     return new StudyDetailResponseDto(study, leader, makeStudyLikeResponseDto(studyId, userId));
   }
 
   public InfinityScrollResponseDto getStudyList(PageableRequestDto pageableRequestDto, Long userId) {
+
+    PageRequest pageRequest = PageRequest.of(0, pageableRequestDto.getSize(), sortCreatedAt());
+
+    List<StudyListEachResponseDto> filteredStudy = queryStudyRepository.getFilteredStudy(pageableRequestDto, pageRequest);
+    Long lastId = queryStudyRepository.getFirstId(pageableRequestDto, pageRequest);
+
+    filteredStudy.forEach(dto -> dto.setStudyLike(makeStudyLikeResponseDto(dto.getId(), userId)));
+
+    return new InfinityScrollResponseDto(lastId, filteredStudy);
+
+  }
+
+  public InfinityScrollResponseDto getStudyList2(PageableRequestDto pageableRequestDto, Long userId) {
     PageRequest pageRequest = PageRequest.of(0, pageableRequestDto.getSize(), sortCreatedAt());
 
     List<Study> studyList;
@@ -117,8 +134,7 @@ public class StudyService {
     }
 
     List<StudyListEachResponseDto> studyListEachResponseDtoList = studyList.stream()
-        .map(eachStudy -> new StudyListEachResponseDto(eachStudy, getLeader(eachStudy.getLeaderUserId()),
-            makeStudyLikeResponseDto(eachStudy.getId(), userId)))
+        .map(eachStudy -> new StudyListEachResponseDto(eachStudy, makeStudyLikeResponseDto(eachStudy.getId(), userId)))
         .collect(Collectors.toList());
 
     if (pageableRequestDto.isEntireCategory()) {
@@ -189,7 +205,7 @@ public class StudyService {
   }
 
   private void checkWhetherLeaderOrNot(Long userId, Study study) {
-    if (!userId.equals(study.getLeaderUserId())) {
+    if (!userId.equals(study.getLeader().getId())) {
 
       throw new UserNotPermittedException();
     }
@@ -337,7 +353,7 @@ public class StudyService {
     List<Study> studyList = studyRepository.findTop6ByOrderByCreatedAtDesc();
 
     return new LatestStudyDto(
-        studyList.stream().map(study -> new StudyListEachResponseDto(study, getLeader(study.getLeaderUserId()), null))
+        studyList.stream().map(study -> new StudyListEachResponseDto(study, null))
             .collect(Collectors.toList()));
   }
 

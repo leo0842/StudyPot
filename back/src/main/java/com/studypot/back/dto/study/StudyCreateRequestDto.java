@@ -2,8 +2,9 @@ package com.studypot.back.dto.study;
 
 import com.studypot.back.domain.CategoryName;
 import com.studypot.back.domain.MeetingType;
-import com.studypot.back.domain.study.Study;
 import com.studypot.back.domain.StudyStatus;
+import com.studypot.back.domain.User;
+import com.studypot.back.domain.study.Study;
 import java.util.List;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +28,7 @@ public class StudyCreateRequestDto {
 
   private MultipartFile thumbnail;
 
-  public Study buildStudy(Long userId, String thumbnailUrl) {
+  public Study buildStudy(User leader, String thumbnailUrl) {
     return Study.builder()
         .locatedAt(this.locatedAt)
         .title(this.title)
@@ -36,7 +37,7 @@ public class StudyCreateRequestDto {
         .meetingType(this.meetingType)
         .status(this.status)
         .thumbnailUrl(thumbnailUrl)
-        .leaderUserId(userId)
+        .leader(leader)
         .build();
   }
 }
