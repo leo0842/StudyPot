@@ -27,10 +27,12 @@ public class QueryStudyRepository {
     QStudyCategory category = QStudyCategory.studyCategory;
 
     List<Study> studyList = query
-        .selectFrom(study)
+        .selectDistinct(study)
+        .from(study)
+        .leftJoin(study.categories, category)
         .where(
             eqMeetingType(study, request.getMeetingType()),
-            eqCategory(study, request.getCategoryName(), category),
+            eqCategory(category, request.getCategoryName()),
             ltLastId(study, request.getLastId()))
         .limit(pageable.getPageSize())
         .orderBy(study.createdAt.desc())
@@ -46,11 +48,22 @@ public class QueryStudyRepository {
 
     return query.select(study.id)
         .from(study)
+        .leftJoin(study.categories, category)
         .where(
             eqMeetingType(study, request.getMeetingType()),
-            eqCategory(study, request.getCategoryName(), category))
+            eqCategory(category, request.getCategoryName()))
         .limit(1)
         .fetchOne();
+  }
+
+  private Predicate eqCategory(QStudyCategory category, CategoryName categoryName) {
+
+    if (categoryName == null) {
+
+      return null;
+    }
+
+    return category.category.eq(categoryName);
   }
 
   private Predicate ltLastId(QStudy study, Long lastId) {
@@ -71,15 +84,4 @@ public class QueryStudyRepository {
     }
     return study.meetingType.eq(meetingType);
   }
-
-  private Predicate eqCategory(QStudy study, CategoryName categoryName, QStudyCategory category) {
-
-    if (categoryName == null) {
-
-      return null;
-    }
-
-    return category.study.id.eq(study.id).and(category.category.eq(categoryName));
-  }
-
 }
