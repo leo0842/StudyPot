@@ -1,5 +1,6 @@
+[![Build Status](https://app.travis-ci.com/leo0842/StudyPot.svg?branch=develop)](https://app.travis-ci.com/leo0842/StudyPot)
 <a href="https://gitmoji.dev">
-  <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square" alt="Gitmoji">
+<img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square" alt="Gitmoji">
 </a>
 
 # 토이 프로젝트 - StudyPot
