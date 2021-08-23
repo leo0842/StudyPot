@@ -1,7 +1,5 @@
-package com.studypot.back.domain.study;
+package com.studypot.back.domain;
 
-import com.studypot.back.domain.CategoryName;
-import com.studypot.back.domain.MeetingType;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;

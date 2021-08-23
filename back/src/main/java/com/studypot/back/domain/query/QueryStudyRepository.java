@@ -4,9 +4,9 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.studypot.back.domain.CategoryName;
 import com.studypot.back.domain.MeetingType;
-import com.studypot.back.domain.study.QStudy;
-import com.studypot.back.domain.study.QStudyCategory;
-import com.studypot.back.domain.study.Study;
+import com.studypot.back.domain.QStudy;
+import com.studypot.back.domain.QStudyCategory;
+import com.studypot.back.domain.Study;
 import com.studypot.back.dto.study.PageableRequestDto;
 import com.studypot.back.dto.study.StudyListEachResponseDto;
 import java.util.List;
@@ -27,10 +27,12 @@ public class QueryStudyRepository {
     QStudyCategory category = QStudyCategory.studyCategory;
 
     List<Study> studyList = query
-        .selectFrom(study)
+        .select(study)
+        .from(study)
+        .leftJoin(study.categories, category)
         .where(
             eqMeetingType(study, request.getMeetingType()),
-            eqCategory(study, request.getCategoryName(), category),
+            eqCategory(category, request.getCategoryName()),
             ltLastId(study, request.getLastId()))
         .limit(pageable.getPageSize())
         .orderBy(study.createdAt.desc())
@@ -46,9 +48,10 @@ public class QueryStudyRepository {
 
     return query.select(study.id)
         .from(study)
+        .leftJoin(study.categories, category)
         .where(
             eqMeetingType(study, request.getMeetingType()),
-            eqCategory(study, request.getCategoryName(), category))
+            eqCategory(category, request.getCategoryName()))
         .limit(1)
         .fetchOne();
   }
@@ -72,14 +75,14 @@ public class QueryStudyRepository {
     return study.meetingType.eq(meetingType);
   }
 
-  private Predicate eqCategory(QStudy study, CategoryName categoryName, QStudyCategory category) {
+  private Predicate eqCategory(QStudyCategory category, CategoryName categoryName) {
 
     if (categoryName == null) {
 
       return null;
     }
 
-    return category.study.id.eq(study.id).and(category.category.eq(categoryName));
+    return category.category.eq(categoryName);
   }
 
 }

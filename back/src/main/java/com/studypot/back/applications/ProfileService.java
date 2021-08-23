@@ -2,12 +2,12 @@ package com.studypot.back.applications;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.studypot.back.domain.CategoryName;
-import com.studypot.back.domain.study.Study;
-import com.studypot.back.domain.study.StudyLike;
-import com.studypot.back.domain.study.StudyLikeRepository;
-import com.studypot.back.domain.study.StudyMember;
-import com.studypot.back.domain.study.StudyMemberRepository;
-import com.studypot.back.domain.study.StudyRepository;
+import com.studypot.back.domain.Study;
+import com.studypot.back.domain.StudyLike;
+import com.studypot.back.domain.StudyLikeRepository;
+import com.studypot.back.domain.StudyMember;
+import com.studypot.back.domain.StudyMemberRepository;
+import com.studypot.back.domain.StudyRepository;
 import com.studypot.back.domain.User;
 import com.studypot.back.domain.UserCategory;
 import com.studypot.back.domain.UserCategoryRepository;
@@ -48,6 +48,11 @@ public class ProfileService {
   private final StudyRepository studyRepository;
 
   public ProfileResponseDto getProfile(Long userId) {
+
+    if (userId == null) {
+
+      throw new UserNotFoundException();
+    }
     User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
     List<StudyMember> studyMemberList = studyMemberRepository.findByUserId(userId);
     List<StudyLike> studyLikeList = studyLikeRepository.findByUserId(userId);

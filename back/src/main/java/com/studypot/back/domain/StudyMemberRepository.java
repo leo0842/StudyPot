@@ -1,7 +1,5 @@
-package com.studypot.back.domain.study;
+package com.studypot.back.domain;
 
-import com.studypot.back.domain.study.Study;
-import com.studypot.back.domain.study.StudyMember;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
