@@ -15,12 +15,11 @@ cache:
 script: "cd back/ && ./gradlew clean build"
 
 before_deploy:
-  - mkdir -p temp
-  - cp ./build/libs/back-0.0.1-SNAPSHOT.jar ./temp/study-pot-api.jar
+  # - mkdir -p temp
+  # - cp ./build/libs/back-0.0.1-SNAPSHOT.jar ./temp/study-pot-api.jar
   # - cp ./appspec.yml ./temp/appspec.yml
-  - zip -r -j jar ./temp
   - mkdir -p deploy
-  - mv jar.zip deploy/jar.zip
+  - mv ./build/libs/back-0.0.1-SNAPSHOT.jar ./deploy/study-pot-api.jar
 
 deploy:
   - provider: s3
@@ -36,19 +35,19 @@ deploy:
       repo: leo0842/StudyPot
       branch: develop
 
-  # - provider: codedeploy
-  #   access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
-  #   secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
-  #   bucket: study-pot-jar-store # S3 버킷
-  #   key: jar.zip # 빌드 파일을 압축해서 전달
-  #   bundle_type: zip
-  #   application: studypot # 웹 콘솔에서 등록한 CodeDeploy 어플리케이션
-  #   deployment_group: study-pot-group # 웹 콘솔에서 등록한 CodeDeploy 배포 그룹
-  #   region: ap-northeast-2
-  #   wait_until_deployed: true
-  #   on:
-  #     repo: leo0842/StudyPot
-  #     branch: develop
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
+    secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
+    bucket: study-pot-jar-store # S3 버킷
+    key: study-pot-api.jar # 빌드 파일을 압축해서 전달
+    bundle_type: jar
+    application: studypot # 웹 콘솔에서 등록한 CodeDeploy 어플리케이션
+    deployment_group: study-pot-group # 웹 콘솔에서 등록한 CodeDeploy 배포 그룹
+    region: ap-northeast-2
+    wait_until_deployed: true
+    on:
+      repo: leo0842/StudyPot
+      branch: develop
 
 # CI 실행 완료시 메일로 알람
 notifications:
