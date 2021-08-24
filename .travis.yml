@@ -19,6 +19,7 @@ before_deploy:
   - cp ./build/libs/back-0.0.1-SNAPSHOT.jar ./temp/study-pot-api.jar
   - cp ../appspec.yml ./temp/appspec.yml
   - zip -r jar ./temp
+  - rm -rf ./temp/
   - mkdir -p deploy
   - mv jar.zip deploy/jar.zip
 
