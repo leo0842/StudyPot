@@ -18,7 +18,7 @@ before_deploy:
   # - mkdir -p temp
   # - cp ./build/libs/back-0.0.1-SNAPSHOT.jar ./temp/study-pot-api.jar
   # - cp ./appspec.yml ./temp/appspec.yml
-  - zip -r -j jar ./build/libs/back-0.0.1-SNAPSHOT.jar
+  - zip -r -j jar ./build/libs/back-0.0.1-SNAPSHOT.jar ./appspec.yml
   - mkdir -p deploy
   - mv ./jar.zip ./deploy/jar.zip
 
