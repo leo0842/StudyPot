@@ -1,2 +1,2 @@
 #!/bin/bash
-/home/ec2-user/app/travis/deploy.sh
+/home/ec2-user/app/travis/deploy.sh > ./tempScript
