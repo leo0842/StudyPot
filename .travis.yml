@@ -16,7 +16,7 @@ script: "cd back/ && ./gradlew clean build"
 
 before_deploy:
   - cp ./build/libs/back-0.0.1-SNAPSHOT.jar ./study-pot-api.jar
-  - zip -r -j jar ./study-pot-api.jar ./appspec.yml
+  - zip -r -j jar ./study-pot-api.jar ./appspec.yml ./execute-deploy.sh
   - mkdir -p deploy
   - mv ./jar.zip ./deploy/jar.zip
 
