@@ -41,3 +41,6 @@ cloud:
 mysql:
   hostServer: ${MYSQL_HOST}
   databaseName: ${MYSQL_DB}
+
+deploy:
+  name: ${DEPLOY_NAME}
