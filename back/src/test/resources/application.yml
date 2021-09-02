@@ -1,0 +1,24 @@
+spring:
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    driver-class-name: org.h2.Driver
+
+jwt:
+  secret: test_key_test_key_test_key_test_key_test_key_
+  jwtExpirationTimeMs: 100000
+  refreshExpirationTimeMs: 100000
+
+cloud:
+  aws:
+    credentials:
+      accessKey: testAccessKey
+      secretKey: testSecretKey
+    s3:
+      bucket: study-pot
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
