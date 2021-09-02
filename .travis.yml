@@ -4,6 +4,7 @@ jdk:
 
 branches:
   only:
+    - develop
     - feature/STUDYPOT132-readme-update
 
 # Travis CI 서버의 Cache 활성화
