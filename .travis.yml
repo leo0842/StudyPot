@@ -5,6 +5,7 @@ jdk:
 branches:
   only:
     - develop
+    - feature/STUDYPOT-132-readme-update
 
 # Travis CI 서버의 Home
 cache:
