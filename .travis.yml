@@ -12,7 +12,7 @@ cache:
     - '$HOME/.m2/repository'
     - '$HOME/.gradle'
 
-script: "./back/gradlew clean build"
+script: "cd back/ && ./gradlew clean build"
 
 # before_deploy:
 #   - cp ./build/libs/back-0.0.1-SNAPSHOT.jar ./study-pot-api.jar
