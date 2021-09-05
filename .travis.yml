@@ -20,19 +20,19 @@ script: "cd back/ && ./gradlew clean build"
 #   - mkdir -p deploy
 #   - mv ./jar.zip ./deploy/jar.zip
 
-# deploy:
-#   - provider: s3
-#     access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
-#     secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
-#     bucket: study-pot-jar-store 
-#     region: ap-northeast-2
-#     skip_cleanup: true
-#     acl: public_read
-#     local_dir: deploy
-#     wait-until-deployed: true
-#     on:
-#       repo: leo0842/StudyPot
-#       branch: develop
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
+    secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
+    bucket: studypot-jar-bucket
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: public_read
+    # local_dir: deploy
+    wait-until-deployed: true
+    on:
+      repo: leo0842/StudyPot
+      branch: travis-ci
 
 #   - provider: codedeploy
 #     access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
